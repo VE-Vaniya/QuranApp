@@ -15,6 +15,20 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { THEME } from '../../theme';
+import { PatternBackground } from '../../components/PatternBackground';
+import { HorizontalVines, VineBorderBox } from '../../components/VineDecorations';
+
+function friendlyAuthError(message?: string): string {
+  if (!message) return 'Something went wrong. Please try again.';
+  const m = message.toLowerCase();
+  if (m.includes('invalid login') || m.includes('invalid credentials')) return 'Incorrect email or password.';
+  if (m.includes('email not confirmed')) return 'Please confirm your email before signing in.';
+  if (m.includes('already registered') || m.includes('already been registered')) {
+    return 'An account with this email already exists. Try signing in.';
+  }
+  if (m.includes('cancel')) return 'Sign-in was cancelled.';
+  return 'Something went wrong. Please try again.';
+}
 
 export default function LoginScreen() {
   const { signIn, signUp, signInWithGoogle, isMockMode } = useAuth();
@@ -75,7 +89,7 @@ export default function LoginScreen() {
       if (isSignUp) {
         const result = await signUp(email, password, displayName);
         if (result.error) {
-          setErrorMsg(result.error.message || 'Sign up failed.');
+          setErrorMsg(friendlyAuthError(result.error.message));
         } else if (result.needsEmailConfirmation) {
           setSuccessMsg('Account created! Check your email to confirm, then sign in.');
           setIsSignUp(false);
@@ -83,13 +97,13 @@ export default function LoginScreen() {
       } else {
         const result = await signIn(email, password);
         if (result.error) {
-          setErrorMsg(result.error.message || 'Sign in failed.');
+          setErrorMsg(friendlyAuthError(result.error.message));
         } else if (result.needsEmailConfirmation) {
           setSuccessMsg('Please confirm your email before signing in.');
         }
       }
-    } catch (e: any) {
-      setErrorMsg(e.message || 'An error occurred during authentication.');
+    } catch {
+      setErrorMsg('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -102,30 +116,32 @@ export default function LoginScreen() {
     try {
       await signInWithGoogle();
     } catch (e: any) {
-      setErrorMsg(e.message || 'Google sign-in failed. Please try again.');
+      if (!e?.message?.toLowerCase().includes('cancel')) {
+        setErrorMsg(friendlyAuthError(e?.message));
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
+    <PatternBackground>
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
       style={styles.container}
     >
       <StatusBar barStyle="dark-content" backgroundColor={THEME.colors.background} />
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-        {/* Decorative Top Arch / Frame */}
         <View style={styles.topLogoContainer}>
           <View style={styles.logoCircle}>
             <Ionicons name="moon-outline" size={32} color={THEME.colors.gold} />
           </View>
           <Text style={styles.logoText}>QuranChat</Text>
           <Text style={styles.logoTagline}>"This is a Reminder for the worlds."</Text>
+          <HorizontalVines style={{ marginTop: 12, width: '80%' }} />
         </View>
 
-        {/* Input Card with elegant double-border style */}
-        <View style={styles.card}>
+        <VineBorderBox style={styles.card}>
           <View style={styles.innerCard}>
             <Animated.View style={{ opacity: fadeAnim }}>
               <Text style={styles.title}>
@@ -224,9 +240,8 @@ export default function LoginScreen() {
               </TouchableOpacity>
             </Animated.View>
           </View>
-        </View>
+        </VineBorderBox>
 
-        {/* Social Authentication / Mock Options */}
         <View style={styles.socialContainer}>
           <View style={styles.dividerRow}>
             <View style={styles.dividerLine} />
@@ -251,6 +266,7 @@ export default function LoginScreen() {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
+    </PatternBackground>
   );
 }
 

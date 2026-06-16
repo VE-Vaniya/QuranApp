@@ -19,6 +19,7 @@ import { supabase } from '../supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useToast } from './ToastProvider';
 import { ThemedDialog } from './ThemedDialog';
+import { PatternBackground } from './PatternBackground';
 
 const DRAWER_WIDTH = Math.min(Dimensions.get('window').width * 0.82, 320);
 
@@ -292,6 +293,7 @@ export function SideMenu({ visible, onClose }: SideMenuProps) {
           </Animated.View>
 
           <Animated.View style={[styles.drawer, { transform: [{ translateX: slideAnim }] }]}>
+            <PatternBackground style={styles.drawerPattern}>
             <View style={styles.drawerHeader}>
               {panel !== 'main' ? (
                 <TouchableOpacity onPress={() => setPanel('main')} style={styles.backBtn}>
@@ -302,12 +304,18 @@ export function SideMenu({ visible, onClose }: SideMenuProps) {
                   <Ionicons name="close" size={22} color={THEME.colors.primary} />
                 </TouchableOpacity>
               )}
-              <Text style={styles.drawerTitle} numberOfLines={1}>{panelTitles[panel]}</Text>
+              <Text
+                style={[styles.drawerTitle, panel === 'main' && styles.drawerTitleMain]}
+                numberOfLines={1}
+              >
+                {panelTitles[panel]}
+              </Text>
             </View>
 
             <View style={styles.drawerBody}>
               {panel === 'main' ? renderMainMenu() : renderPanelContent()}
             </View>
+            </PatternBackground>
           </Animated.View>
         </View>
       </Modal>
@@ -339,10 +347,13 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     width: DRAWER_WIDTH,
-    backgroundColor: THEME.colors.backgroundCard,
     borderRightWidth: 1,
     borderRightColor: THEME.colors.goldBorder,
     ...THEME.shadows.elegant,
+    overflow: 'hidden',
+  },
+  drawerPattern: {
+    flex: 1,
   },
   drawerHeader: {
     flexDirection: 'row',
@@ -353,6 +364,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: THEME.colors.border,
     gap: 8,
+    backgroundColor: 'rgba(250, 247, 240, 0.92)',
   },
   backBtn: { padding: 4 },
   drawerTitle: {
@@ -360,6 +372,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: THEME.colors.primary,
+  },
+  drawerTitleMain: {
+    fontSize: 24,
   },
   drawerBody: { flex: 1, padding: 16 },
   emailBlock: {

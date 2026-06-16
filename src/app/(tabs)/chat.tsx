@@ -191,18 +191,17 @@ export default function ChatScreen() {
         // Increment streak for engaging in learning activity
         await incrementStreak();
       } else {
-        const errorText = json.error?.message || 'Unexpected response format from Gemini API.';
-        console.error("Gemini Error:", json);
-        throw new Error(errorText);
+        console.error('Gemini Error:', json);
+        throw new Error('service_unavailable');
       }
     } catch (e: any) {
-      const errMsg = e.message || 'Connection timeout. Please check your network.';
+      console.error('Chat error:', e);
       setMessages(prev => [
         ...prev,
         {
           id: Math.random().toString(),
           sender: 'ai',
-          text: `I couldn't generate a response right now. Please check your connection and try again.\n\nDetails: ${errMsg}`,
+          text: "I'm having trouble responding right now. Please wait a moment and try again.",
           timestamp: new Date()
         }
       ]);

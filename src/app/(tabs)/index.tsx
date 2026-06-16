@@ -19,6 +19,7 @@ import { PatternBackground } from '../../components/PatternBackground';
 import { SideMenu } from '../../components/SideMenu';
 import { useToast } from '../../components/ToastProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { HorizontalVines } from '../../components/VineDecorations';
 
 const INSPIRATIONAL_VERSES = [
   {
@@ -211,6 +212,8 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
+
+          <HorizontalVines style={{ marginBottom: 20 }} />
 
           <Text style={styles.sectionTitle}>Continue Your Journey</Text>
 

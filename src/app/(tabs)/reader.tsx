@@ -22,6 +22,7 @@ import { PatternBackground } from '../../components/PatternBackground';
 import { searchSurahsByName } from '../../lib/surahSearch';
 import { useToast } from '../../components/ToastProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CenteredTitleWithVines, VineBorderBox } from '../../components/VineDecorations';
 
 interface Ayah {
   number: number;
@@ -324,14 +325,20 @@ export default function ReaderScreen() {
   return (
     <PatternBackground>
     <View style={styles.container}>
-      <View style={[styles.headerBar, { paddingTop: insets.top + 12 }]}>
+      <View style={[styles.headerBar, { paddingTop: insets.top + 8, minHeight: insets.top + 52 }]}>
         {selectedSurah ? (
-          <TouchableOpacity style={styles.backButton} onPress={() => setSelectedSurah(null)}>
-            <Ionicons name="arrow-back" size={24} color={THEME.colors.primary} />
-            <Text style={styles.backButtonText}>Surahs</Text>
-          </TouchableOpacity>
+          <View style={styles.surahHeaderRow}>
+            <TouchableOpacity style={styles.backButton} onPress={() => setSelectedSurah(null)}>
+              <Ionicons name="arrow-back" size={22} color={THEME.colors.primary} />
+              <Text style={styles.backButtonText}>Surahs</Text>
+            </TouchableOpacity>
+            <Text style={styles.surahHeaderBarTitle} numberOfLines={1}>
+              {selectedSurah.englishName}
+            </Text>
+            <View style={styles.backButtonSpacer} />
+          </View>
         ) : (
-          <Text style={styles.headerTitle}>Holy Quran</Text>
+          <CenteredTitleWithVines title="Holy Quran" textStyle={styles.headerTitle} />
         )}
       </View>
 
@@ -428,23 +435,18 @@ export default function ReaderScreen() {
               showsVerticalScrollIndicator={false}
               ListHeaderComponent={() => (
                 <>
-                  <View style={styles.surahHeaderCard}>
+                  <VineBorderBox style={styles.surahHeaderCard} cornerColor={THEME.colors.goldLight}>
                     <Text style={styles.surahHeaderArabic}>{selectedSurah.name}</Text>
                     <Text style={styles.surahHeaderTitle}>{selectedSurah.englishName}</Text>
                     <Text style={styles.surahHeaderSubtitle}>
                       {selectedSurah.englishNameTranslation} • {selectedSurah.revelationType} • {selectedSurah.numberOfAyahs} Verses
                     </Text>
-                  </View>
+                  </VineBorderBox>
 
                   {selectedSurah.number !== 1 && selectedSurah.number !== 9 && (
                     <View style={styles.bismillahCard}>
-                      <View style={styles.ayahHeader}>
-                        <View style={styles.ayahNumberBadge}>
-                          <Ionicons name="star-outline" size={12} color={THEME.colors.primary} />
-                        </View>
-                      </View>
-                      <Text style={styles.ayahArabic}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</Text>
-                      <Text style={styles.ayahEnglish}>In the name of Allah, the Entirely Merciful, the Especially Merciful.</Text>
+                      <Text style={styles.bismillahArabic}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</Text>
+                      <Text style={styles.bismillahEnglish}>In the name of Allah, the Entirely Merciful, the Especially Merciful.</Text>
                     </View>
                   )}
                 </>
@@ -474,30 +476,39 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.colors.background,
   },
   headerBar: {
-    paddingBottom: 12,
-    paddingHorizontal: 20,
+    paddingBottom: 10,
+    paddingHorizontal: 16,
     backgroundColor: THEME.colors.backgroundCard,
     borderBottomWidth: 1,
     borderBottomColor: THEME.colors.goldBorder,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     ...THEME.shadows.small,
   },
   headerTitle: {
     fontSize: 22,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: THEME.colors.primary,
-    textAlign: 'center',
+  },
+  surahHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     width: '100%',
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    position: 'absolute',
-    left: 20,
-    bottom: 12,
+    minWidth: 80,
+  },
+  backButtonSpacer: {
+    minWidth: 80,
+  },
+  surahHeaderBarTitle: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'PlayfairDisplay_700Bold',
+    color: THEME.colors.primary,
+    textAlign: 'center',
   },
   backButtonText: {
     fontSize: 16,
@@ -663,46 +674,66 @@ const styles = StyleSheet.create({
   },
   readerContent: {
     paddingHorizontal: 16,
+    paddingTop: 8,
     paddingBottom: 40,
   },
   surahHeaderCard: {
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: 12,
     marginBottom: 12,
     padding: 24,
+    paddingVertical: 28,
     borderRadius: 16,
     borderColor: THEME.colors.gold,
-    borderWidth: 1.5,
-    backgroundColor: 'rgba(75, 42, 74, 0.08)',
+    borderWidth: 1,
+    backgroundColor: THEME.colors.accent,
     ...THEME.shadows.small,
   },
   surahHeaderArabic: {
     fontSize: 28,
     fontFamily: 'PlayfairDisplay_700Bold',
-    color: THEME.colors.primary,
+    color: THEME.colors.textLight,
     marginBottom: 8,
   },
   surahHeaderTitle: {
     fontSize: 22,
     fontFamily: 'PlayfairDisplay_700Bold',
-    color: THEME.colors.primary,
+    color: THEME.colors.goldLight,
     marginBottom: 4,
   },
   surahHeaderSubtitle: {
     fontSize: 12,
     fontFamily: 'Inter_400Regular',
-    color: THEME.colors.textSecondary,
+    color: 'rgba(250, 247, 240, 0.75)',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    textAlign: 'center',
   },
   bismillahCard: {
     backgroundColor: THEME.colors.backgroundCard,
     borderWidth: 1,
     borderColor: THEME.colors.border,
     borderRadius: 12,
-    padding: 16,
+    padding: 20,
     marginBottom: 16,
+    alignItems: 'center',
     ...THEME.shadows.small,
+  },
+  bismillahArabic: {
+    fontSize: 20,
+    fontFamily: 'PlayfairDisplay_700Bold',
+    color: THEME.colors.primary,
+    textAlign: 'center',
+    marginBottom: 8,
+    lineHeight: 32,
+  },
+  bismillahEnglish: {
+    fontSize: 13,
+    fontFamily: 'Inter_400Regular',
+    color: THEME.colors.textSecondary,
+    textAlign: 'center',
+    fontStyle: 'italic',
+    lineHeight: 18,
   },
   ayahCard: {
     backgroundColor: THEME.colors.backgroundCard,

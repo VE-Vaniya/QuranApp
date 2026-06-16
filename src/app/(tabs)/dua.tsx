@@ -161,7 +161,7 @@ export default function DuaFeedScreen() {
   };
 
   const handlePray = async (dua: DuaRequest) => {
-    if (!user) return;
+    if (!user || dua.user_id === user.id) return;
 
     // Optimistic UI updates
     const updatedDuas = duas.map(d => {
@@ -280,6 +280,8 @@ export default function DuaFeedScreen() {
       return 'just now';
     };
 
+    const isOwnDua = item.user_id === user?.id;
+
     return (
       <View style={styles.duaCard}>
         <View style={styles.duaHeader}>
@@ -290,26 +292,29 @@ export default function DuaFeedScreen() {
             <Text style={styles.duaUserName}>{item.display_name}</Text>
             <Text style={styles.duaTimeText}>{timeAgo(item.created_at)}</Text>
           </View>
-          <Ionicons name="bookmark-outline" size={16} color={THEME.colors.border} />
         </View>
 
         <Text style={styles.duaTitle}>{item.title}</Text>
         <Text style={styles.duaContent}>"{item.content}"</Text>
 
         <View style={styles.duaFooter}>
-          <TouchableOpacity 
-            style={[styles.prayBtn, item.has_prayed ? styles.prayBtnActive : {}]}
-            onPress={() => handlePray(item)}
-          >
-            <Ionicons 
-              name={item.has_prayed ? "heart" : "heart-outline"} 
-              size={18} 
-              color={item.has_prayed ? THEME.colors.textLight : THEME.colors.gold} 
-            />
-            <Text style={[styles.prayBtnText, item.has_prayed ? styles.prayBtnTextActive : {}]}>
-              {item.has_prayed ? "Prayed" : "Pray for them"}
-            </Text>
-          </TouchableOpacity>
+          {!isOwnDua ? (
+            <TouchableOpacity
+              style={[styles.prayBtn, item.has_prayed ? styles.prayBtnActive : {}]}
+              onPress={() => handlePray(item)}
+            >
+              <Ionicons
+                name={item.has_prayed ? 'heart' : 'heart-outline'}
+                size={18}
+                color={item.has_prayed ? THEME.colors.textLight : THEME.colors.gold}
+              />
+              <Text style={[styles.prayBtnText, item.has_prayed ? styles.prayBtnTextActive : {}]}>
+                {item.has_prayed ? 'Prayed' : 'Pray for them'}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <Text style={styles.ownDuaLabel}>Your dua request</Text>
+          )}
 
           <Text style={styles.duaStats}>
             {item.pray_count} {item.pray_count === 1 ? 'person' : 'people'} praying
@@ -575,6 +580,12 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: 'Inter_500Medium',
     color: THEME.colors.textSecondary,
+  },
+  ownDuaLabel: {
+    fontSize: 11,
+    fontFamily: 'Inter_500Medium',
+    color: THEME.colors.goldDark,
+    fontStyle: 'italic',
   },
   emptyContainer: {
     alignItems: 'center',
