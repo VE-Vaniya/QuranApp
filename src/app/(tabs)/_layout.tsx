@@ -29,6 +29,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarActiveTintColor: THEME.colors.primary,
         tabBarInactiveTintColor: THEME.colors.textSecondary,
+        tabBarHideOnKeyboard: true,
         tabBarStyle: {
           backgroundColor: THEME.colors.backgroundCard,
           borderTopWidth: 1,

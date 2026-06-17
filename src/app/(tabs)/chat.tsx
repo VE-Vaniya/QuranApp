@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { 
   View, 
   Text, 
@@ -35,6 +35,51 @@ Rules:
 4. If appropriate, write the key Arabic text of the referenced ayah to help the user connect.
 5. Maintain a respectful, humble, and spiritual tone. If a topic is completely unrelated to spiritual growth or Quranic guidance, gently guide the user back to reflection on Quranic themes.
 6. Keep answers structured, clear, and readable. Use paragraph breaks and bullet points where helpful.`;
+
+const AnimatedMessageRow = memo(({ item }: { item: Message }) => {
+  const isUser = item.sender === 'user';
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(15)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      })
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View style={[
+      styles.messageRow, 
+      isUser ? styles.userRow : styles.aiRow, 
+      { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+    ]}>
+      {!isUser && (
+        <View style={styles.aiAvatar}>
+          <Ionicons name="moon" size={12} color={THEME.colors.gold} />
+        </View>
+      )}
+      <View style={[styles.bubble, isUser ? styles.userBubble : styles.aiBubble]}>
+        <Text style={[styles.messageText, isUser ? styles.userText : styles.aiText]}>
+          {item.text}
+        </Text>
+        <Text style={[styles.timeText, isUser ? styles.userTimeText : styles.aiTimeText]}>
+          {item.timestamp instanceof Date 
+            ? item.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </Text>
+      </View>
+    </Animated.View>
+  );
+});
 
 export default function ChatScreen() {
   const { incrementStreak } = useAuth();
@@ -211,54 +256,9 @@ export default function ChatScreen() {
     }
   };
 
-  const AnimatedMessageRow = ({ item }: { item: Message }) => {
-    const isUser = item.sender === 'user';
-    const fadeAnim = useRef(new Animated.Value(0)).current;
-    const slideAnim = useRef(new Animated.Value(15)).current;
-
-    useEffect(() => {
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        })
-      ]).start();
-    }, []);
-
-    return (
-      <Animated.View style={[
-        styles.messageRow, 
-        isUser ? styles.userRow : styles.aiRow, 
-        { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
-      ]}>
-        {!isUser && (
-          <View style={styles.aiAvatar}>
-            <Ionicons name="moon" size={12} color={THEME.colors.gold} />
-          </View>
-        )}
-        <View style={[styles.bubble, isUser ? styles.userBubble : styles.aiBubble]}>
-          <Text style={[styles.messageText, isUser ? styles.userText : styles.aiText]}>
-            {item.text}
-          </Text>
-          <Text style={[styles.timeText, isUser ? styles.userTimeText : styles.aiTimeText]}>
-            {item.timestamp instanceof Date 
-              ? item.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              : new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </Text>
-        </View>
-      </Animated.View>
-    );
-  };
-
-  const renderMessageItem = ({ item }: { item: Message }) => {
+  const renderMessageItem = useCallback(({ item }: { item: Message }) => {
     return <AnimatedMessageRow item={item} />;
-  };
+  }, []);
 
   return (
     <PatternBackground>
