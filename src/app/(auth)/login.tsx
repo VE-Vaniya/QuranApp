@@ -13,10 +13,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
-import { THEME } from '../../theme';
 import { PatternBackground } from '../../components/PatternBackground';
 import { HorizontalVines, VineBorderBox } from '../../components/VineDecorations';
+import { useAuth } from '../../context/AuthContext';
+import { THEME } from '../../theme';
 
 function friendlyAuthError(message?: string): string {
   if (!message) return 'Something went wrong. Please try again.';
@@ -105,21 +105,6 @@ export default function LoginScreen() {
       }
     } catch {
       setErrorMsg('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    setErrorMsg('');
-    setSuccessMsg('');
-    try {
-      await signInWithGoogle();
-    } catch (e: any) {
-      if (!e?.message?.toLowerCase().includes('cancel')) {
-        setErrorMsg(friendlyAuthError(e?.message));
-      }
     } finally {
       setLoading(false);
     }
@@ -222,6 +207,7 @@ export default function LoginScreen() {
                   </TouchableOpacity>
                 </View>
               </View>
+              
 
               {/* Action Button with scaling animation */}
               <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
@@ -257,26 +243,13 @@ export default function LoginScreen() {
         </VineBorderBox>
 
         <View style={styles.socialContainer}>
-          <View style={styles.dividerRow}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>OR CONTINUE WITH</Text>
-            <View style={styles.dividerLine} />
-          </View>
+                   <HorizontalVines style={{ marginTop: 12, width: '80%' }} />
 
           {isMockMode && (
             <Text style={styles.mockAlertText}>
-              <Ionicons name="information-circle-outline" size={12} /> Mock mode: email login works instantly. Google uses a demo account.
+              <Ionicons name="information-circle-outline" size={12} /> Mock mode: email login works instantlly.
             </Text>
           )}
-
-          <TouchableOpacity
-            style={[styles.socialButton, styles.googleButton]}
-            onPress={handleGoogleSignIn}
-            disabled={loading}
-          >
-            <Ionicons name="logo-google" size={18} color="#EA4335" />
-            <Text style={[styles.socialButtonText, { color: '#2D2D2D' }]}>Continue with Google</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -500,10 +473,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     width: '100%',
-  },
-  googleButton: {
-    backgroundColor: '#FFF',
-    borderColor: THEME.colors.border,
   },
   socialButtonText: {
     fontSize: 14,
