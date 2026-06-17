@@ -60,6 +60,7 @@ export function SideMenu({ visible, onClose }: SideMenuProps) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
   const [logoutDialog, setLogoutDialog] = useState(false);
+  const [showPanelPassword, setShowPanelPassword] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -247,22 +248,48 @@ export function SideMenu({ visible, onClose }: SideMenuProps) {
       return (
         <View style={styles.panelScroll}>
           <Text style={styles.panelHint}>Enter a new password for your account.</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="New password"
-            placeholderTextColor={THEME.colors.textSecondary}
-            secureTextEntry
-            value={newPassword}
-            onChangeText={setNewPassword}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm password"
-            placeholderTextColor={THEME.colors.textSecondary}
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
+          <View style={styles.passwordInputContainer}>
+            <TextInput
+              style={styles.passwordInputField}
+              placeholder="New password"
+              placeholderTextColor={THEME.colors.textSecondary}
+              secureTextEntry={!showPanelPassword}
+              value={newPassword}
+              onChangeText={setNewPassword}
+            />
+            <TouchableOpacity 
+              style={styles.eyeBtn}
+              onPress={() => setShowPanelPassword(!showPanelPassword)}
+              activeOpacity={0.7}
+            >
+              <Ionicons 
+                name={showPanelPassword ? "eye-off-outline" : "eye-outline"} 
+                size={18} 
+                color={THEME.colors.textSecondary} 
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.passwordInputContainer}>
+            <TextInput
+              style={styles.passwordInputField}
+              placeholder="Confirm password"
+              placeholderTextColor={THEME.colors.textSecondary}
+              secureTextEntry={!showPanelPassword}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
+            <TouchableOpacity 
+              style={styles.eyeBtn}
+              onPress={() => setShowPanelPassword(!showPanelPassword)}
+              activeOpacity={0.7}
+            >
+              <Ionicons 
+                name={showPanelPassword ? "eye-off-outline" : "eye-outline"} 
+                size={18} 
+                color={THEME.colors.textSecondary} 
+              />
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity style={styles.primaryBtn} onPress={handleChangePassword} disabled={changingPassword}>
             {changingPassword ? (
               <ActivityIndicator color={THEME.colors.textLight} />
@@ -425,6 +452,29 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
     color: THEME.colors.textDark,
     marginBottom: 12,
+  },
+  passwordInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+    borderRadius: 8,
+    height: 44,
+    marginBottom: 12,
+  },
+  passwordInputField: {
+    flex: 1,
+    height: '100%',
+    paddingHorizontal: 12,
+    fontSize: 14,
+    fontFamily: 'Inter_400Regular',
+    color: THEME.colors.textDark,
+  },
+  eyeBtn: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   primaryBtn: {
     height: 44,

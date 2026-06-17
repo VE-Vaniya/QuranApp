@@ -1,91 +1,85 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { THEME } from '../theme';
 
 interface CornerLeavesProps {
   color?: string;
-  size?: number; // Size of the leaf icon. Adjust this to make it bigger/smaller.
+  size?: number;
 }
 
-/**
- * Reusable CornerLeaves component that renders 8 leaf decorations in the corners of a card.
- * To use this, the parent container MUST have `position: 'relative'` and some padding.
- * 
- * Adjust the `size` prop or the positions in the styles below to manually reposition them.
- */
 export const CornerLeaves: React.FC<CornerLeavesProps> = ({ 
   color = THEME.colors.gold, 
-  size = 20 // Default size (can be customized)
+  size = 20
 }) => {
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       {/* ======================================================== */}
       {/* TOP LEFT CORNER */}
-      {/* Horizontal: tip facing right (0 degrees is right) */}
+      {/* Horizontal: tip → RIGHT (0° = right) */}
       <Ionicons 
         name="leaf" 
         size={size} 
         color={color} 
-        style={[styles.leaf, styles.topLeftHorizontal, { transform: [{ rotate: '45deg' }] }]} 
+        style={[styles.leaf, styles.topLeftHorizontal, { transform: [{ rotate: '0deg' }] }]} 
       />
-      {/* Vertical: tip facing down (90 degrees is down) */}
+      {/* Vertical: tip ↓ DOWN (90° = down) */}
       <Ionicons 
         name="leaf" 
         size={size} 
         color={color} 
-        style={[styles.leaf, styles.topLeftVertical, { transform: [{ rotate: '135deg' }] }]} 
+        style={[styles.leaf, styles.topLeftVertical, { transform: [{ rotate: '90deg' }] }]} 
       />
 
       {/* ======================================================== */}
       {/* TOP RIGHT CORNER */}
-      {/* Horizontal: tip facing left (180 degrees is left) */}
+      {/* Horizontal: tip ← LEFT (180° = left) */}
       <Ionicons 
         name="leaf" 
         size={size} 
         color={color} 
-        style={[styles.leaf, styles.topRightHorizontal, { transform: [{ rotate: '225deg' }] }]} 
+        style={[styles.leaf, styles.topRightHorizontal, { transform: [{ rotate: '180deg' }] }]} 
       />
-      {/* Vertical: tip facing down (90 degrees is down) */}
+      {/* Vertical: tip ↓ DOWN (90° = down) */}
       <Ionicons 
         name="leaf" 
         size={size} 
         color={color} 
-        style={[styles.leaf, styles.topRightVertical, { transform: [{ rotate: '135deg' }] }]} 
+        style={[styles.leaf, styles.topRightVertical, { transform: [{ rotate: '90deg' }] }]} 
       />
 
       {/* ======================================================== */}
       {/* BOTTOM LEFT CORNER */}
-      {/* Horizontal: tip facing right (0 degrees is right) */}
+      {/* Horizontal: tip → RIGHT (0° = right) */}
       <Ionicons 
         name="leaf" 
         size={size} 
         color={color} 
-        style={[styles.leaf, styles.bottomLeftHorizontal, { transform: [{ rotate: '45deg' }] }]} 
+        style={[styles.leaf, styles.bottomLeftHorizontal, { transform: [{ rotate: '0deg' }] }]} 
       />
-      {/* Vertical: tip facing up (270 degrees is up) */}
+      {/* Vertical: tip ↑ UP (270° = up) */}
       <Ionicons 
         name="leaf" 
         size={size} 
         color={color} 
-        style={[styles.leaf, styles.bottomLeftVertical, { transform: [{ rotate: '315deg' }] }]} 
+        style={[styles.leaf, styles.bottomLeftVertical, { transform: [{ rotate: '270deg' }] }]} 
       />
 
       {/* ======================================================== */}
       {/* BOTTOM RIGHT CORNER */}
-      {/* Horizontal: tip facing left (180 degrees is left) */}
+      {/* Horizontal: tip ← LEFT (180° = left) */}
       <Ionicons 
         name="leaf" 
         size={size} 
         color={color} 
-        style={[styles.leaf, styles.bottomRightHorizontal, { transform: [{ rotate: '225deg' }] }]} 
+        style={[styles.leaf, styles.bottomRightHorizontal, { transform: [{ rotate: '180deg' }] }]} 
       />
-      {/* Vertical: tip facing up (270 degrees is up) */}
+      {/* Vertical: tip ↑ UP (270° = up) */}
       <Ionicons 
         name="leaf" 
         size={size} 
         color={color} 
-        style={[styles.leaf, styles.bottomRightVertical, { transform: [{ rotate: '315deg' }] }]} 
+        style={[styles.leaf, styles.bottomRightVertical, { transform: [{ rotate: '270deg' }] }]} 
       />
     </View>
   );
@@ -97,44 +91,43 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   
-  // TOP LEFT CORNER POSITIONS
-  // Adjust top/left values to position them exactly as you like
+  // TOP LEFT — stems in corner (0,0), tips pointing inward
   topLeftHorizontal: {
-    top: 6,
-    left: 20,
+    top: 0,
+    left: 0,
   },
   topLeftVertical: {
-    top: 20,
-    left: 6,
+    top: 0,
+    left: 0,
   },
 
-  // TOP RIGHT CORNER POSITIONS
+  // TOP RIGHT — stems in corner
   topRightHorizontal: {
-    top: 6,
-    right: 20,
+    top: 0,
+    right: 0,
   },
   topRightVertical: {
-    top: 20,
-    right: 6,
+    top: 0,
+    right: 0,
   },
 
-  // BOTTOM LEFT CORNER POSITIONS
+  // BOTTOM LEFT — stems in corner
   bottomLeftHorizontal: {
-    bottom: 6,
-    left: 20,
+    bottom: 0,
+    left: 0,
   },
   bottomLeftVertical: {
-    bottom: 20,
-    left: 6,
+    bottom: 0,
+    left: 0,
   },
 
-  // BOTTOM RIGHT CORNER POSITIONS
+  // BOTTOM RIGHT — stems in corner
   bottomRightHorizontal: {
-    bottom: 6,
-    right: 20,
+    bottom: 0,
+    right: 0,
   },
   bottomRightVertical: {
-    bottom: 20,
-    right: 6,
+    bottom: 0,
+    right: 0,
   },
 });
