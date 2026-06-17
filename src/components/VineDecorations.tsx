@@ -8,35 +8,65 @@ interface CornerVinesProps {
   size?: number;
 }
 
-export function CornerVines({ color = THEME.colors.gold, size = 14 }: CornerVinesProps) {
-  const leaf = (rotation: string, flip?: boolean) => (
-    <Ionicons
-      name="leaf"
-      size={size}
-      color={color}
-      style={{ transform: [{ rotate: rotation }, ...(flip ? [{ scaleX: -1 }] : [])], opacity: 0.75 }}
-    />
-  );
-
+export function CornerVines({ color = THEME.colors.gold, size = 18 }: CornerVinesProps) {
   return (
-    <>
-      <View style={[styles.corner, styles.topLeft]} pointerEvents="none">
-        {leaf('-35deg')}
-        {leaf('-70deg', true)}
-      </View>
-      <View style={[styles.corner, styles.topRight]} pointerEvents="none">
-        {leaf('35deg', true)}
-        {leaf('70deg')}
-      </View>
-      <View style={[styles.corner, styles.bottomLeft]} pointerEvents="none">
-        {leaf('35deg')}
-        {leaf('70deg', true)}
-      </View>
-      <View style={[styles.corner, styles.bottomRight]} pointerEvents="none">
-        {leaf('-35deg', true)}
-        {leaf('-70deg')}
-      </View>
-    </>
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      {/* TOP LEFT CORNER: Horizontal tip -> Right, Vertical tip -> Down */}
+      <Ionicons 
+        name="leaf" 
+        size={size} 
+        color={color} 
+        style={[styles.leaf, { top: 6, left: 20, transform: [{ rotate: '45deg' }] }]} 
+      />
+      <Ionicons 
+        name="leaf" 
+        size={size} 
+        color={color} 
+        style={[styles.leaf, { top: 20, left: 6, transform: [{ rotate: '135deg' }] }]} 
+      />
+
+      {/* TOP RIGHT CORNER: Horizontal tip -> Left, Vertical tip -> Down */}
+      <Ionicons 
+        name="leaf" 
+        size={size} 
+        color={color} 
+        style={[styles.leaf, { top: 6, right: 20, transform: [{ rotate: '225deg' }] }]} 
+      />
+      <Ionicons 
+        name="leaf" 
+        size={size} 
+        color={color} 
+        style={[styles.leaf, { top: 20, right: 6, transform: [{ rotate: '135deg' }] }]} 
+      />
+
+      {/* BOTTOM LEFT CORNER: Horizontal tip -> Right, Vertical tip -> Up */}
+      <Ionicons 
+        name="leaf" 
+        size={size} 
+        color={color} 
+        style={[styles.leaf, { bottom: 6, left: 20, transform: [{ rotate: '45deg' }] }]} 
+      />
+      <Ionicons 
+        name="leaf" 
+        size={size} 
+        color={color} 
+        style={[styles.leaf, { bottom: 20, left: 6, transform: [{ rotate: '315deg' }] }]} 
+      />
+
+      {/* BOTTOM RIGHT CORNER: Horizontal tip -> Left, Vertical tip -> Up */}
+      <Ionicons 
+        name="leaf" 
+        size={size} 
+        color={color} 
+        style={[styles.leaf, { bottom: 6, right: 20, transform: [{ rotate: '225deg' }] }]} 
+      />
+      <Ionicons 
+        name="leaf" 
+        size={size} 
+        color={color} 
+        style={[styles.leaf, { bottom: 20, right: 6, transform: [{ rotate: '315deg' }] }]} 
+      />
+    </View>
   );
 }
 
@@ -100,16 +130,11 @@ export function VineBorderBox({
 }
 
 const styles = StyleSheet.create({
-  corner: {
+  leaf: {
     position: 'absolute',
-    flexDirection: 'row',
-    gap: 1,
-    zIndex: 2,
+    opacity: 0.85,
+    zIndex: 10,
   },
-  topLeft: { top: 4, left: 4 },
-  topRight: { top: 4, right: 4 },
-  bottomLeft: { bottom: 4, left: 4 },
-  bottomRight: { bottom: 4, right: 4 },
   horizontalWrap: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -19,7 +19,7 @@ import { PatternBackground } from '../../components/PatternBackground';
 import { SideMenu } from '../../components/SideMenu';
 import { useToast } from '../../components/ToastProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { HorizontalVines } from '../../components/VineDecorations';
+import { HorizontalVines, VineBorderBox } from '../../components/VineDecorations';
 
 const INSPIRATIONAL_VERSES = [
   {
@@ -79,24 +79,24 @@ const JOURNEY_BUTTONS = [
     subtitle: 'Ask questions and get scripture-backed answers',
     icon: 'chatbubbles' as const,
     route: '/chat',
-    bg: '#C5A059',
-    textColor: THEME.colors.primary,
+    bg: '#9C4132', // Rusty Red
+    textColor: '#FAF7F0',
   },
   {
     title: 'Read & Search',
     subtitle: 'Read the Holy Quran and search verses by keyword',
     icon: 'book' as const,
     route: '/reader',
-    bg: THEME.colors.primary,
-    textColor: THEME.colors.textLight,
+    bg: '#4B2A4A', // Deep Purple
+    textColor: '#FAF7F0',
   },
   {
     title: 'Dua Community',
     subtitle: 'Share prayer requests and pray for others',
     icon: 'heart' as const,
     route: '/dua',
-    bg: THEME.colors.accent,
-    textColor: THEME.colors.textLight,
+    bg: '#1A332E', // Forest Green
+    textColor: '#FAF7F0',
   },
 ];
 
@@ -174,7 +174,7 @@ export default function HomeScreen() {
 
         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
           <View style={styles.verseCardContainer}>
-            <View style={styles.verseCardInner}>
+            <VineBorderBox style={styles.verseCardInner} cornerColor={THEME.colors.goldLight}>
               <Text style={styles.arabicText}>{dailyVerse.arabic}</Text>
               <Text style={styles.englishText}>"{dailyVerse.english}"</Text>
               <Text style={styles.referenceText}>
@@ -210,7 +210,7 @@ export default function HomeScreen() {
                   <Text style={styles.cardActionBtnText}>Share</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </VineBorderBox>
           </View>
 
           <HorizontalVines style={{ marginBottom: 20 }} />

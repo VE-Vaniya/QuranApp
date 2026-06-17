@@ -565,8 +565,8 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   prayBtnActive: {
-    backgroundColor: THEME.colors.accent,
-    borderColor: THEME.colors.accent,
+    backgroundColor: THEME.colors.primary,
+    borderColor: THEME.colors.primary,
   },
   prayBtnText: {
     fontSize: 11,

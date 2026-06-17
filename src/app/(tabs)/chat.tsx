@@ -211,10 +211,32 @@ export default function ChatScreen() {
     }
   };
 
-  const renderMessageItem = ({ item }: { item: Message }) => {
+  const AnimatedMessageRow = ({ item }: { item: Message }) => {
     const isUser = item.sender === 'user';
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(15)).current;
+
+    useEffect(() => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        })
+      ]).start();
+    }, []);
+
     return (
-      <View style={[styles.messageRow, isUser ? styles.userRow : styles.aiRow]}>
+      <Animated.View style={[
+        styles.messageRow, 
+        isUser ? styles.userRow : styles.aiRow, 
+        { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+      ]}>
         {!isUser && (
           <View style={styles.aiAvatar}>
             <Ionicons name="moon" size={12} color={THEME.colors.gold} />
@@ -225,18 +247,24 @@ export default function ChatScreen() {
             {item.text}
           </Text>
           <Text style={[styles.timeText, isUser ? styles.userTimeText : styles.aiTimeText]}>
-            {item.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {item.timestamp instanceof Date 
+              ? item.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              : new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </Text>
         </View>
-      </View>
+      </Animated.View>
     );
+  };
+
+  const renderMessageItem = ({ item }: { item: Message }) => {
+    return <AnimatedMessageRow item={item} />;
   };
 
   return (
     <PatternBackground>
     <View style={styles.container}>
-      <View style={[styles.headerBar, { paddingTop: insets.top + 12 }]}>
-        <View>
+      <View style={[styles.headerBar, { paddingTop: insets.top + 12, justifyContent: 'center' }]}>
+        <View style={{ alignItems: 'center' }}>
           <Text style={styles.headerTitle}>AI QuranChat</Text>
           <Text style={styles.headerSubtitle}>Reflecting with Scripture</Text>
         </View>
@@ -400,7 +428,7 @@ const styles = StyleSheet.create({
     ...THEME.shadows.small,
   },
   userBubble: {
-    backgroundColor: THEME.colors.primary,
+    backgroundColor: '#9C4132', // Rusty Red
     borderColor: THEME.colors.gold,
     borderWidth: 1,
     borderBottomRightRadius: 2,
@@ -474,7 +502,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: THEME.colors.primary,
+    backgroundColor: '#9C4132', // Rusty Red
     borderColor: THEME.colors.gold,
     borderWidth: 1,
     alignItems: 'center',
@@ -552,7 +580,7 @@ const styles = StyleSheet.create({
   },
   saveKeyBtn: {
     height: 44,
-    backgroundColor: THEME.colors.primary,
+    backgroundColor: '#9C4132', // Rusty Red
     borderColor: THEME.colors.gold,
     borderWidth: 1,
     borderRadius: 8,

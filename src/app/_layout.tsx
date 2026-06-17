@@ -14,19 +14,20 @@ import {
 } from '@expo-google-fonts/inter';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { ToastProvider } from '../components/ToastProvider';
-import { THEME } from '../theme';
+import { THEME, useTheme } from '../theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 function RootLayoutNav() {
   const { loading } = useAuth();
+  const { colors, isDark } = useTheme();
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <StatusBar barStyle="dark-content" backgroundColor={THEME.colors.background} />
-        <Text style={styles.loadingTitle}>QuranChat</Text>
-        <Text style={styles.loadingSubtitle}>Reconnect with the words that guide your heart</Text>
-        <ActivityIndicator size="large" color={THEME.colors.gold} style={{ marginTop: 24 }} />
+      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+        <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.background} />
+        <Text style={[styles.loadingTitle, { color: colors.primary }]}>QuranChat</Text>
+        <Text style={[styles.loadingSubtitle, { color: colors.accent }]}>Reconnect with the words that guide your heart</Text>
+        <ActivityIndicator size="large" color={colors.gold} style={{ marginTop: 24 }} />
       </View>
     );
   }
@@ -40,9 +41,9 @@ function RootLayoutNav() {
         options={{ 
           presentation: 'modal', 
           headerShown: true,
-          headerStyle: { backgroundColor: THEME.colors.backgroundCard },
-          headerTitleStyle: { fontFamily: 'PlayfairDisplay_700Bold', color: THEME.colors.primary },
-          headerTintColor: THEME.colors.primary,
+          headerStyle: { backgroundColor: colors.backgroundCard },
+          headerTitleStyle: { fontFamily: 'PlayfairDisplay_700Bold', color: colors.primary },
+          headerTintColor: colors.primary,
           title: 'Reflection Note'
         }} 
       />
@@ -60,12 +61,14 @@ export default function RootLayout() {
     Inter_700Bold,
   });
 
+  const { colors, isDark } = useTheme();
+
   if (!fontsLoaded) {
     return (
-      <View style={styles.loadingContainer}>
-        <StatusBar barStyle="dark-content" backgroundColor={THEME.colors.background} />
-        <Text style={styles.loadingTitle}>QuranChat</Text>
-        <ActivityIndicator size="large" color={THEME.colors.gold} style={{ marginTop: 24 }} />
+      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+        <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.background} />
+        <Text style={[styles.loadingTitle, { color: colors.primary }]}>QuranChat</Text>
+        <ActivityIndicator size="large" color={colors.gold} style={{ marginTop: 24 }} />
       </View>
     );
   }
@@ -74,7 +77,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <AuthProvider>
         <ToastProvider>
-          <StatusBar barStyle="dark-content" backgroundColor={THEME.colors.background} />
+          <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.background} />
           <RootLayoutNav />
         </ToastProvider>
       </AuthProvider>
