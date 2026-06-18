@@ -46,7 +46,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "vercel-build": "expo export"
+    "vercel-build": "npx expo export"
   },
   "private": true
 }
